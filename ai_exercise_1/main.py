@@ -1,25 +1,19 @@
 # main.py
 
 import numpy as np
-from utils.estado import Estado
-from functions.functions import acoes_permitidas, movimentar
+from utils.classes import State
+from functions.functions import hamming_heuristic, astar_heuristic
 
 def main():
-    # Exemplo de comparação entre estados
-    estado = Estado(matriz=np.array([[4, 1, 3], [9, 2, 5], [7, 8, 6]]))
-    estado.p = 1
-    estado2 = Estado(matriz=np.array([[4, 1, 3], [9, 2, 5], [7, 8, 6]]))
-    estado2.p = 2
-    print("Comparação de estados (estado < estado2):", estado < estado2)
-    estado.mostrar()
-
-    # Exemplo de uso das funções de ação
-    print("Possíveis Ações")
-    s = Estado(matriz=np.array([[1, 2, 3], [4, 9, 5], [7, 8, 6]]))
-    s.mostrar()
-    for acao in acoes_permitidas(s):
-        v = movimentar(s, acao)
-        v.mostrar()
+    goal_state = State(matrix=np.array([[1, 2, 3],
+                                        [4, 5, 6],
+                                        [7, 8, 9]]))
+    start_state = State(matrix=np.array([[1, 2, 3],
+                                        [4, 9, 5],
+                                        [7, 8, 6]]))
+    result_state = astar_heuristic(start_state, hamming_heuristic, goal_state)
+    result_state.display()
+    print(result_state.path_length)
 
 if __name__ == "__main__":
     main()
