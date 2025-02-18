@@ -5,7 +5,9 @@ from functions import (
     hamming_heuristic,
     is_solvable,
     parse_arguments,
-    astar_heuristic
+    astar_heuristic,
+    display_detailed_output,
+    display_simple_output
 )
 from database import generate_and_store_states
 
@@ -71,36 +73,6 @@ def build_solution_path(result_state: State):
         current = current.parent
     solution_path.reverse()
     return solution_path
-
-def display_simple_output(execution_time: float, states_explored: int, solution_path: list, start_state: State):
-    """
-    Displays a concise output including execution time, explored states, and path length.
-
-    Parameters:
-        execution_time (float): Time taken to solve the puzzle.
-        states_explored (int): Number of states explored by A*.
-        solution_path (list): List of states in the solution path.
-        start_state (State): The initial state.
-    """
-    print("- Execution Time: {:.4f} seconds".format(execution_time))
-    print("- States Explored:", states_explored)
-    print("- Path Length:", len(solution_path) - 1)
-    print("- Start State:", start_state.matrix.flatten().tolist())
-
-def display_detailed_output(solution_path: list):
-    """
-    Displays the full solution path.
-
-    Parameters:
-        solution_path (list): List of states in the solution path.
-    """
-    print("\nSolution found!")
-    print("Number of steps:", len(solution_path) - 1)
-    print("Solution path:\n")
-    for step, state in enumerate(solution_path):
-        print(f"Step {step}:")
-        state.display()
-        print()
 
 def main():
     """
