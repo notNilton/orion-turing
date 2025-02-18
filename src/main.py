@@ -12,8 +12,6 @@ from functions import (
     build_solution_path
 )
 
-# DEFAULT_DB_PATH = os.path.join(os.path.dirname(__file__), "..", "data", "puzzle_states.db")
-
 from database import generate_and_store_states, testdata
 
 from utils.init import initialize_states
