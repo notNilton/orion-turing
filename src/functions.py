@@ -10,13 +10,16 @@ from scipy.signal import convolve2d as conv2
 
 from utils.classes import State
 
+from setup import DEFAULT_DB_PATH
+
 def parse_arguments():
     """
-    Parses command-line arguments.
+    Parses command-line arguments for solving the 8-puzzle, generating data, or testing stored states.
     """
     parser = argparse.ArgumentParser(
-        description="Solve the 8-puzzle or generate solvable states."
+        description="Solve the 8-puzzle or generate/test solvable states."
     )
+    
     parser.add_argument(
         "--simple",
         action="store_true",
@@ -33,16 +36,22 @@ def parse_arguments():
         help="Generate all possible 8-puzzle states and store only solvable ones in the database.",
     )
     parser.add_argument(
+        "--testdata",
+        action="store_true",
+        help="Run the pathfinding algorithm on all stored solvable states from the database.",
+    )
+    parser.add_argument(
         "--db_path",
         type=str,
-        default="data/puzzle_states.db",
-        help="Specify a custom path for the SQLite database.",
+        default=DEFAULT_DB_PATH,
+        help=f"Specify a custom path for the SQLite database (default: {DEFAULT_DB_PATH}).",
     )
     parser.add_argument(
         "--store_all",
         action="store_true",
         help="Store all generated states instead of only the solvable ones.",
     )
+
     return parser.parse_args()
 
 def hamming_heuristic(state: State) -> int:
@@ -190,3 +199,41 @@ def display_detailed_output(solution_path: list):
         print(f"Step {step}:")
         state.display()
         print()
+
+def solve_puzzle(start_state: State, goal_state: State, heuristic=hamming_heuristic):
+    """
+    Solves the 8-puzzle using A* with a given heuristic.
+
+    Parameters:
+        start_state (State): The initial state.
+        goal_state (State): The goal state.
+        heuristic (function, optional): The heuristic function to use (default: Hamming heuristic).
+
+    Returns:
+        tuple: (result_state, execution_time)
+    """
+    
+    start_time = time.time()
+    astar_heuristic.states_explored = 0
+    result_state = astar_heuristic(start_state, heuristic, goal_state)
+    execution_time = time.time() - start_time
+
+    return result_state, execution_time
+
+def build_solution_path(result_state: State):
+    """
+    Builds the solution path from the final state.
+
+    Parameters:
+        result_state (State): The resulting state from the A* algorithm.
+
+    Returns:
+        list: List of states representing the solution path.
+    """
+    solution_path = []
+    current = result_state
+    while current is not None:
+        solution_path.append(current)
+        current = current.parent
+    solution_path.reverse()
+    return solution_path
