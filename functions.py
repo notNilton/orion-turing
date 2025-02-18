@@ -33,7 +33,7 @@ def performance_analysis(func):
         return result
     return wrapper
 
-@performance_analysis
+# @performance_analysis
 def astar_heuristic(initial_state: State, heuristic, goal: State):
     """
     Performs the A* search algorithm to find a path from the initial state to the goal state.
